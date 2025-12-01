@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <vector>
+using namespace std;
 
 #ifdef _WIN32
     #include <conio.h>
@@ -11,42 +14,109 @@
 #endif
 
 
-int getKeyInput() {
-    #ifdef _WIN32
-        if (_kbhit()) {
-            return _getch();
-        }
-        return -1;
-    #else
-        struct termios old_settings, new_settings;
-        tcgetattr(STDIN_FILENO, &old_settings);
-        new_settings = old_settings;
-        new_settings.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
-        
-        fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
-        unsigned char c;
-        int result = read(STDIN_FILENO, &c, 1);
-        
-        tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
-        
-        if (result > 0) {
-            return (int)c;
-        }
-        return -1;
-    #endif
+void clearScreen() {
+    // Print 50 newlines to clear the screen
+    for (int i = 0; i < 50; i++) {
+        std::cout << std::endl;
+    }
 }
 
+class entity {
+    public:
+        int x = 1;
+        int y = 1;
+        void move(int key) {
+            int new_x = x;
+            int new_y = y;
+            
+            // WASD keys
+            if (key == 'w' || key == 'W') {
+                new_x -= 1;  // Move up
+            }
+            else if (key == 's' || key == 'S') {
+                new_x += 1;  // Move down
+            }
+            else if (key == 'a' || key == 'A') {
+                new_y -= 1;  // Move left
+            }
+            else if (key == 'd' || key == 'D') {
+                new_y += 1;  // Move right
+            }
+            // Arrow keys (Windows)
+            #ifdef _WIN32
+            else if (key == 72) {  // Up arrow
+                new_x -= 1;
+            }
+            else if (key == 80) {  // Down arrow
+                new_x += 1;
+            }
+            else if (key == 75) {  // Left arrow
+                new_y -= 1;
+            }
+            else if (key == 77) {  // Right arrow
+                new_y += 1;
+            }
+            #endif
+            
+            // Keep player within bounds (0-3)
+            if (new_x >= 0 && new_x < 4 && new_y >= 0 && new_y < 4) {
+                x = new_x;
+                y = new_y;
+            }
+        }
+};
 
 int main() {
+    char game[4][4] = {
+        {'@', '@', '@', '@'},
+        {'@', '@', '@', '@'},
+        {'@', '@', '@', '@'},
+        {'@', '@', '@', '@'}
+    }; // game initialization
+    entity player;
+
     std::cout << "Hello, World!" << std::endl;
-    std::cout << "Press escape to leave" << std::endl;
+    std::cout << "Press Enter to start the game" << std::endl;
     
-    while (true) {
-        int key = getKeyInput();
-        if (key == 27) {  // 27 is Escape key
-            std::cout << "Exiting" << std::endl;
-            break;
+    std::string start;
+    std::getline(std::cin, start);
+    
+    clearScreen();
+    std::cout << "Game started! Use w/a/s/d to move, q to quit" << std::endl;
+    
+    while (true)
+    {
+        // Clear the game board
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                game[i][j] = '@';
+            }
+        }
+        
+        // Draw player
+        game[player.x][player.y] = 'O';
+        
+        // Display the game board
+        std::cout << "\nGame Board:" << std::endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                std::cout << game[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        
+        std::cout << "Enter move (w/a/s/d or q to quit): ";
+        
+        std::string input;
+        std::getline(std::cin, input);
+        
+        if (!input.empty()) {
+            char key = input[0];
+            if (key == 'q' || key == 'Q') {  // Quit game
+                std::cout << "Thanks for playing!" << std::endl;
+                break;
+            }
+            player.move(key);
         }
     }
     
