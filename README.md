@@ -1,6 +1,6 @@
 # Ball Game
 
-A simple cross-platform C++ application that demonstrates keyboard input handling.
+A simple cross-platform C++ game
 
 ## Features
 
@@ -34,13 +34,8 @@ g++ -o main main.cpp
 1. Run the executable
 2. The program displays "Hello, World!"
 3. Press the **Escape key** to exit
-
-## How it Works
-
-The program uses platform-specific methods to detect keyboard input without blocking:
-
-- **Windows**: Uses `_kbhit()` and `_getch()` from `conio.h`
-- **Unix/Linux/macOS**: Uses `termios` with non-blocking file I/O
+4. Press the **Enter key** to play
+5. Controls listed in game
 
 ## License
 
