@@ -25,7 +25,7 @@ class entity {
     public:
         int x = 1;
         int y = 1;
-        void move(int key) {
+        void move(int key, char game[4][4]) {
             int new_x = x;
             int new_y = y;
             
@@ -60,8 +60,11 @@ class entity {
             
             // Keep player within bounds (0-3)
             if (new_x >= 0 && new_x < 4 && new_y >= 0 && new_y < 4) {
-                x = new_x;
-                y = new_y;
+                // Check if new position collides with a wall
+                if (game[new_x][new_y] != '#') {
+                    x = new_x;
+                    y = new_y;
+                }
             }
         }
 };
@@ -122,7 +125,7 @@ int main() {
                 std::cout << "Thanks for playing!" << std::endl;
                 break;
             }
-            player.move(key);
+            player.move(key, game);
         }
     }
     
