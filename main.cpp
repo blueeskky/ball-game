@@ -74,6 +74,9 @@ int main() {
         {'@', '@', '@', '@'}
     }; // game initialization
     entity player;
+    entity wall0;
+    wall0.x = rand() % 4;
+    wall0.y = rand() % 4;
 
     std::cout << "Hello, World!" << std::endl;
     std::cout << "Press Enter to start the game" << std::endl;
@@ -89,9 +92,12 @@ int main() {
         // Clear the game board
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                game[i][j] = '@';
+                game[i][j] = ' ';
             }
         }
+        
+        // Draw wall
+        game[wall0.x][wall0.y] = '#';
         
         // Draw player
         game[player.x][player.y] = 'O';
@@ -105,7 +111,7 @@ int main() {
             std::cout << std::endl;
         }
         
-        std::cout << "Enter move (w/a/s/d or q to quit): ";
+        std::cout << "Enter move (w/a/s/d or q to quit) and press enter to confirm: ";
         
         std::string input;
         std::getline(std::cin, input);
