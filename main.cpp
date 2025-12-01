@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 #ifdef _WIN32
@@ -70,6 +71,8 @@ class entity {
 };
 
 int main() {
+    srand(time(0));  // Seed the random number generator
+    
     char game[4][4] = {
         {'@', '@', '@', '@'},
         {'@', '@', '@', '@'},
